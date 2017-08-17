@@ -24,19 +24,19 @@
         android:weightSum="3">
 
         <TextView
-            android:drawableStart="@drawable/ic_language"
             android:id="@+id/repo_language"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_language_black"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
-            android:drawableStart="@drawable/ic_star"
             android:id="@+id/repo_stars"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_star_black"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableStart="@drawable/ic_fork"
+            android:drawableStart="@drawable/ic_fork_black"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
     </LinearLayout>
