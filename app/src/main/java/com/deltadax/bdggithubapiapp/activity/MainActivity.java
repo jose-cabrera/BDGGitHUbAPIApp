@@ -2,32 +2,60 @@ package com.deltadax.bdggithubapiapp.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.deltadax.bdggithubapiapp.R;
+import com.deltadax.bdggithubapiapp.adapter.UserAdapter;
+import com.deltadax.bdggithubapiapp.entity.GitHubUser;
+import com.deltadax.bdggithubapiapp.fragment.UserAddFragment;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class MainActivity extends AppCompatActivity implements UserAddFragment.usuarioAgregadoInterface, UserAdapter.userItemCliked {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.lista_usuarios)
+    RecyclerView listaUsuarios;
+
+    UserAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        adapter = new UserAdapter(this, this);
+
+        prepareRecylerView();
+        cargarUsuarios();
+    }
+
+    private void prepareRecylerView() {
+        listaUsuarios.setLayoutManager(new LinearLayoutManager(
+                this, LinearLayoutManager.VERTICAL, false
+        ));
+
+        listaUsuarios.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarUsuarios();
     }
 
     @Override
@@ -50,5 +78,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.fab)
+    public void onViewClicked() {
+
+        UserAddFragment fragment = UserAddFragment.newInstance();
+        fragment.setListener(this);
+        fragment.show(getSupportFragmentManager(), UserAddFragment.class.getSimpleName());
+
+    }
+
+    @Override
+    public void usuarioAgregado() {
+        cargarUsuarios();
+    }
+
+    public void cargarUsuarios() {
+        List<GitHubUser> lista = GitHubUser.listAll(GitHubUser.class);
+
+        if (adapter != null)
+            adapter.setItems(lista);
+    }
+
+    @Override
+    public void itemClicked(int position) {
+        callDetailActivity(adapter.getItems().get(position));
+    }
+
+    private void callDetailActivity(GitHubUser usuario) {
+        DetailActivity.start(this, usuario.getId());
     }
 }

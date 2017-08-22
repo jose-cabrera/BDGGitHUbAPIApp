@@ -1,109 +1,152 @@
 package com.deltadax.bdggithubapiapp.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.deltadax.bdggithubapiapp.R;
+import com.deltadax.bdggithubapiapp.RetroFitService;
+import com.deltadax.bdggithubapiapp.adapter.UserAdapter;
+import com.deltadax.bdggithubapiapp.entity.GitHubUser;
+import com.deltadax.bdggithubapiapp.webservice.GitHubApi;
+import com.deltadax.bdggithubapiapp.webservice.RetroFitImpl;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UserAddFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link UserAddFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class UserAddFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+public class UserAddFragment extends DialogFragment {
+
+    @BindView(R.id.et_usuario)
+    EditText etUsuario;
+    @BindView(R.id.tipo_usuario)
+    Spinner tipoUsuario;
+    @BindView(R.id.agregar_usuario)
+    Button agregarUsuario;
+    Unbinder unbinder;
+
+    String[] tipos = new String[]{
+            "Seleccione uno...", "Dev", "Dev2", "Dev3"
+    };
+
+    usuarioAgregadoInterface listener;
 
     public UserAddFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserAddFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UserAddFragment newInstance(String param1, String param2) {
+    public static UserAddFragment newInstance() {
         UserAddFragment fragment = new UserAddFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_add, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_add, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        preareSpinner();
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void preareSpinner() {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item);
+        adapter.addAll(tipos);
+        tipoUsuario.setAdapter(adapter);
+
+    }
+
+    public void setListener(usuarioAgregadoInterface listener) {
+        this.listener = listener;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @OnClick(R.id.agregar_usuario)
+    public void onViewClicked() {
+        String usuario = etUsuario.getText().toString();
+        if (!usuario.isEmpty()) {
+            etUsuario.setError(null);
+            consumirWs(usuario);
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            etUsuario.setError("Ingresa un usuario");
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    private void consumirWs(String usuario) {
+
+        new getUsuario(getActivity()).execute(usuario);
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface usuarioAgregadoInterface {
+        void usuarioAgregado();
+    }
+
+    private class getUsuario extends AsyncTask<String, Void, GitHubUser> {
+
+        private ProgressDialog dialog;
+        private Context context;
+
+        public getUsuario(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(context, "Obtener Usuario",
+                    "Cargando");
+        }
+
+        @Override
+        protected GitHubUser doInBackground(String... strings) {
+
+            GitHubApi api = RetroFitService.getInstance();
+
+            try {
+                return api.getUser(strings[0]).execute().body();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(GitHubUser gitHubUser) {
+
+            if (dialog != null)
+                dialog.dismiss();
+
+            if (gitHubUser == null) {
+                etUsuario.setError("Usuario no existe u ocurrio un error");
+            } else {
+                GitHubUser user = GitHubUser.newObject(gitHubUser);
+                user.save();
+                UserAddFragment.this.dismiss();
+                listener.usuarioAgregado();
+            }
+
+        }
     }
 }

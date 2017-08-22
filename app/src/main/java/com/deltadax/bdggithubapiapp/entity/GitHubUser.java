@@ -1,7 +1,14 @@
 package com.deltadax.bdggithubapiapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
+import java.text.ParseException;
+import java.util.ArrayList;
 
 /**
  * Created by JosePablo on 20/08/17.
@@ -9,11 +16,10 @@ import com.orm.SugarRecord;
  */
 
 public class GitHubUser extends SugarRecord<GitHubUser> {
-
+    //git_hub_user
     private String login;
 
-    @SerializedName("id")
-    private int git_id;
+    private long git_id;
 
     private String avatar_url;
     private String url;
@@ -26,6 +32,46 @@ public class GitHubUser extends SugarRecord<GitHubUser> {
     private String created_at;
     private int public_repos;
     private int followers;
+
+    private int tipo;
+
+    public GitHubUser() {
+    }
+
+    public static GitHubUser newObject(GitHubUser user) {
+        GitHubUser we = new GitHubUser();
+        we.setAvatar_url(user.getAvatar_url());
+        we.setBlog(user.getBlog());
+        we.setCompany(user.getCompany());
+        we.setCreated_at(user.getCreated_at());
+        we.setEmail(user.getEmail());
+        we.setFollowers(user.getFollowers());
+        we.setHtml_url(user.getHtml_url());
+        we.setLocation(user.getLocation());
+        we.setLogin(user.getLogin());
+        we.setGit_id(user.getId());
+        we.setName(user.getName());
+        we.setPublic_repos(user.getPublic_repos());
+        return we;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    private ArrayList<GitHubRepos> repositorios;
+
+    public ArrayList<GitHubRepos> getRepositorios() {
+        return repositorios;
+    }
+
+    public void setRepositorios(ArrayList<GitHubRepos> repositorios) {
+        this.repositorios = repositorios;
+    }
 
     public String getBlog() {
         return blog;
@@ -59,11 +105,11 @@ public class GitHubUser extends SugarRecord<GitHubUser> {
         this.login = login;
     }
 
-    public int getGit_id() {
+    public long getGit_id() {
         return git_id;
     }
 
-    public void setGit_id(int git_id) {
+    public void setGit_id(long git_id) {
         this.git_id = git_id;
     }
 
@@ -130,5 +176,4 @@ public class GitHubUser extends SugarRecord<GitHubUser> {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
-
 }

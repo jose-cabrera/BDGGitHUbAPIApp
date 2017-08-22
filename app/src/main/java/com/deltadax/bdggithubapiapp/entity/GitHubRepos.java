@@ -7,9 +7,9 @@ import com.orm.SugarRecord;
  * Created by JosePablo on 20/08/17.
  */
 
+//git_hub_repos
 public class GitHubRepos extends SugarRecord<GitHubRepos> {
 
-    @SerializedName("id")
     private int git_id;
     private String name;
     private String full_name;
@@ -25,6 +25,9 @@ public class GitHubRepos extends SugarRecord<GitHubRepos> {
     private String created_at;
     private String updated_at;
     private String git_url;
+
+    public GitHubRepos() {
+    }
 
     public int getForks() {
         return forks;
