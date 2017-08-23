@@ -15,18 +15,17 @@ import butterknife.ButterKnife;
 
 public class ReposViewHolder extends RecyclerView.ViewHolder {
 
-    int we = R.layout.repos_item;
     @BindView(R.id.repo_name)
-    TextView repoName;
+    public TextView repoName;
     @BindView(R.id.repo_desc)
-    TextView repoDesc;
+    public TextView repoDesc;
     @BindView(R.id.repo_language)
-    TextView repoLanguage;
+    public TextView repoLanguage;
     @BindView(R.id.repo_stars)
-    TextView repoStars;
+    public TextView repoStars;
     @BindView(R.id.repo_forks)
-    TextView repoForks;
-    View container;
+    public TextView repoForks;
+    public View container;
 
     public ReposViewHolder(View itemView) {
         super(itemView);

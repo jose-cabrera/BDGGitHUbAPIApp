@@ -10,9 +10,10 @@ import com.orm.SugarRecord;
 //git_hub_repos
 public class GitHubRepos extends SugarRecord<GitHubRepos> {
 
-    private int git_id;
+    private long git_id;
     private String name;
     private String full_name;
+    private String language;
 
     @SerializedName("private")
     private boolean bPrivate;
@@ -27,6 +28,34 @@ public class GitHubRepos extends SugarRecord<GitHubRepos> {
     private String git_url;
 
     public GitHubRepos() {
+    }
+
+    public static GitHubRepos newObject(GitHubRepos repo) {
+        GitHubRepos obj = new GitHubRepos();
+
+        obj.setGit_id(repo.getId());
+        obj.setName(repo.getName());
+        obj.setFull_name(repo.getFull_name());
+        obj.setbPrivate(repo.isbPrivate());
+        obj.setHtml_url(repo.getHtml_url());
+        obj.setDescription(repo.getDescription());
+        obj.setForks(repo.getForks());
+        obj.setStargazers_count(repo.getStargazers_count());
+        obj.setUrl(repo.getUrl());
+        obj.setCreated_at(repo.getCreated_at());
+        obj.setUpdated_at(repo.getUpdated_at());
+        obj.setGit_url(repo.getGit_url());
+        obj.setLanguage(repo.getLanguage());
+
+        return obj;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public int getForks() {
@@ -69,11 +98,11 @@ public class GitHubRepos extends SugarRecord<GitHubRepos> {
         this.git_url = git_url;
     }
 
-    public int getGit_id() {
+    public long getGit_id() {
         return git_id;
     }
 
-    public void setGit_id(int git_id) {
+    public void setGit_id(long git_id) {
         this.git_id = git_id;
     }
 
@@ -116,7 +145,7 @@ public class GitHubRepos extends SugarRecord<GitHubRepos> {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public String getUrl() {
         return url;
     }
