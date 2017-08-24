@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.deltadax.bdggithubapiapp.R;
 import com.deltadax.bdggithubapiapp.adapter.UserAdapter;
+import com.deltadax.bdggithubapiapp.entity.GitHubRepos;
 import com.deltadax.bdggithubapiapp.entity.GitHubUser;
 import com.deltadax.bdggithubapiapp.fragment.UserAddFragment;
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements UserAddFragment.u
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         adapter = new UserAdapter(this, this);
 
         prepareRecylerView();
@@ -73,7 +76,17 @@ public class MainActivity extends AppCompatActivity implements UserAddFragment.u
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_erase) {
+
+            GitHubUser.deleteAll(GitHubUser.class);
+            GitHubRepos.deleteAll(GitHubRepos.class);
+            cargarUsuarios();
+
+            return true;
+        }
+
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 

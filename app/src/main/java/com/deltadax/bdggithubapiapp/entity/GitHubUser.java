@@ -1,15 +1,8 @@
 package com.deltadax.bdggithubapiapp.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 import com.orm.dsl.Unique;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 
 /**
  * Created by JosePablo on 20/08/17.
@@ -63,16 +56,6 @@ public class GitHubUser extends SugarRecord {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
-    }
-
-    private ArrayList<GitHubRepos> repositorios;
-
-    public ArrayList<GitHubRepos> getRepositorios() {
-        return repositorios;
-    }
-
-    public void setRepositorios(ArrayList<GitHubRepos> repositorios) {
-        this.repositorios = repositorios;
     }
 
     public String getBlog() {

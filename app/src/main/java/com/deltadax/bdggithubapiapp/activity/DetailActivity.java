@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.deltadax.bdggithubapiapp.R;
 import com.deltadax.bdggithubapiapp.entity.GitHubUser;
 import com.deltadax.bdggithubapiapp.entity.ReposEvent;
+import com.deltadax.bdggithubapiapp.fragment.ReposFragment;
 import com.deltadax.bdggithubapiapp.service.ReposService;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -97,7 +99,9 @@ public class DetailActivity extends AppCompatActivity {
 
         userLocation.setText(user.getLocation());
         repoEmail.setText(user.getEmail());
+        repoEmail.setVisibility(user.getEmail() == null ? View.GONE : View.VISIBLE);
         repoWebpage.setText(user.getHtml_url());
+        repoWebpage.setVisibility(user.getHtml_url() == null ? View.GONE : View.VISIBLE);
 
     }
 
@@ -118,5 +122,38 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this,
                 String.format(getString(R.string.repos_sincro), evento.getUsuario()),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.button_repos)
+    public void onViewClicked() {
+        cambiarVisibilidad(false);
+        abrirFragment();
+    }
+
+    private void abrirFragment() {
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frame_layout, ReposFragment.newInstance(user.getId()))
+                .addToBackStack(ReposFragment.class.getSimpleName())
+                .commit();
+
+    }
+
+    private void cambiarVisibilidad(boolean bandera) {
+        detailLayout.setVisibility(bandera ? View.VISIBLE : View.GONE);
+        frameLayout.setVisibility(bandera ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count != 0) {
+            cambiarVisibilidad(true);
+        }
+
+        super.onBackPressed();
+
     }
 }

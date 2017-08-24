@@ -10,4 +10,6 @@
     <string name="agregar">Agregar</string>
     <string name="imagen">Imagen</string>
     <string name="repos_sincro">Repos de %s sincronizados</string>
+    <string name="ver_repositorios">Ver repositorios</string>
+    <string name="borrar">Borrar</string>
 </resources>

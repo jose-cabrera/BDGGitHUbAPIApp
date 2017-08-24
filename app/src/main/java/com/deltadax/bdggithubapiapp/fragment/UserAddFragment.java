@@ -146,7 +146,6 @@ public class UserAddFragment extends DialogFragment {
                 UserAddFragment.this.dismiss();
                 listener.usuarioAgregado();
             }
-
         }
     }
 }

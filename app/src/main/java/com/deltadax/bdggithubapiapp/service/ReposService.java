@@ -74,8 +74,12 @@ public class ReposService extends IntentService {
                     repos.add(GitHubRepos.newObject(repo));
                 }
 
-            for (GitHubRepos repo : repos) {
-                repo.save();
+            List<GitHubUser> userRecord = GitHubUser.find(GitHubUser.class,
+                    "login =?", usuario);
+
+            for (GitHubRepos r : repos) {
+                r.setUsuario(userRecord.get(0));
+                r.save();
             }
 
             EventBus.getDefault().post(new ReposEvent(usuario));

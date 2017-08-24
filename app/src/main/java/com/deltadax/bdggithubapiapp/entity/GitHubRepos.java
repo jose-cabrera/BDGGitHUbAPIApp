@@ -29,6 +29,8 @@ public class GitHubRepos extends SugarRecord {
     private String updated_at;
     private String git_url;
 
+    private GitHubUser usuario;
+
     public GitHubRepos() {
     }
 
@@ -50,6 +52,14 @@ public class GitHubRepos extends SugarRecord {
         obj.setLanguage(repo.getLanguage());
 
         return obj;
+    }
+
+    public GitHubUser getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(GitHubUser usuario) {
+        this.usuario = usuario;
     }
 
     public String getLanguage() {
