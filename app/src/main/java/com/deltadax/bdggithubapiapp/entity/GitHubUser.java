@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+import com.orm.dsl.Unique;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
  * GitHub User Entity
  */
 
-public class GitHubUser extends SugarRecord<GitHubUser> {
+public class GitHubUser extends SugarRecord {
     //git_hub_user
     private String login;
 
+    @Unique
     private long git_id;
 
     private String avatar_url;

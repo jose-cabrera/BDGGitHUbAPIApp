@@ -2,14 +2,16 @@ package com.deltadax.bdggithubapiapp.entity;
 
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
 /**
  * Created by JosePablo on 20/08/17.
  */
 
 //git_hub_repos
-public class GitHubRepos extends SugarRecord<GitHubRepos> {
+public class GitHubRepos extends SugarRecord {
 
+    @Unique
     private long git_id;
     private String name;
     private String full_name;

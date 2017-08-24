@@ -114,7 +114,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void eventoRecibido(ReposEvent evento) {
+    public void eventoRecibido(ReposEvent evento) {
         Toast.makeText(this,
                 String.format(getString(R.string.repos_sincro), evento.getUsuario()),
                 Toast.LENGTH_SHORT).show();
